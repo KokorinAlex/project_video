@@ -1,172 +1,84 @@
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
+
 import 'package:flutter/material.dart';
-import 'dart:async';
 
-enum LanguageEnum {
-  russian,
-  english,
-  deutsche,
+import './logic.dart';
+
+void main(List<String> args) => runApp(FilmsApp());
+
+class FilmsApp extends StatefulWidget {
+  const FilmsApp({Key? key}) : super(key: key);
+
+  @override
+  State<FilmsApp> createState() => _FilmsAppState();
 }
 
-abstract class Films {
-  String id;
-  String title;
-  String picture;
-  double voteAverage;
-  String releaseDate;
-  String description;
-  String language;
-
-  Films(
-      {required this.id,
-      required this.title,
-      required this.picture,
-      required this.voteAverage,
-      required this.releaseDate,
-      required this.description,
-      required this.language});
-}
-
-mixin Converting {
-  LanguageEnum? changeLanguage(String language) {
-    switch (language) {
-      case 'russian':
-        return LanguageEnum.russian;
-      case 'english':
-        return LanguageEnum.english;
-      case 'deutsche':
-        return LanguageEnum.deutsche;
-      default:
-        return null;
-    }
+class _FilmsAppState extends State<FilmsApp> {
+  Icon customIcon = Icon(
+    Icons.search,
+    size: 28,
+  );
+  Widget customSearchBar = Text('Films');
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      theme: ThemeData(
+          fontFamily: 'Quicksand',
+          primarySwatch: Colors.deepPurple,
+          appBarTheme: AppBarTheme(
+              centerTitle: true,
+              titleTextStyle: TextStyle(
+                  fontFamily: 'OpenSans-Bold',
+                  //fontWeight: FontWeight.bold,
+                  fontSize: 28))),
+      home: Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          title: customSearchBar,
+          actions: [
+            IconButton(
+                onPressed: () {
+                  setState(() {
+                    if (customIcon.icon == Icons.search) {
+                      customIcon = Icon(Icons.cancel);
+                      customSearchBar = ListTile(
+                        trailing: IconButton(
+                          icon: Icon(Icons.send, color: Colors.white),
+                          onPressed: () {},
+                        ),
+                        leading: Icon(
+                          Icons.search,
+                          color: Colors.white,
+                          size: 28,
+                        ),
+                        title: TextField(
+                          cursorColor: Colors.white,
+                          decoration: InputDecoration(
+                            hintText: 'Enter the name of film',
+                            hintStyle: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                            ),
+                            border: InputBorder.none,
+                          ),
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      );
+                    } else {
+                      customIcon = const Icon(Icons.search);
+                      customSearchBar = const Text('Films');
+                    }
+                  });
+                },
+                icon: customIcon)
+          ],
+        ),
+        body: Column(
+          children: [],
+        ),
+      ),
+    );
   }
-}
-
-class NewFilm extends Films with Converting {
-  NewFilm(
-      {required String id,
-      required String title,
-      required String picture,
-      required double voteAverage,
-      required String releaseDate,
-      required String description,
-      required String language})
-      : super(
-            id: id,
-            title: title,
-            picture: picture,
-            voteAverage: voteAverage,
-            releaseDate: releaseDate,
-            description: description,
-            language: language);
-
-  bool filterOfVideo(NewFilm film) {
-    if (film.voteAverage >= 9) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  LanguageEnum? runConvert() {
-    return changeLanguage(language);
-  }
-}
-
-Future<List> returnList() async {
-  return [
-    NewFilm(
-        id: '',
-        title: 'Harry Potter',
-        picture: '',
-        voteAverage: 10.0,
-        releaseDate: '',
-        description: '',
-        language: 'english'),
-    NewFilm(
-        id: '',
-        title: 'Silicon Valle',
-        picture: '',
-        voteAverage: 15,
-        releaseDate: '',
-        description: '',
-        language: 'english'),
-    NewFilm(
-        id: '',
-        title: 'Bad film',
-        picture: '',
-        voteAverage: 2.0,
-        releaseDate: '',
-        description: '',
-        language: 'english'),
-  ];
-  // List ret = [];
-  // ret.add(itemFilm);
-  // return ret;
-}
-
-extension LanguageExtension on LanguageEnum {
-  String get nameOfLanguage {
-    switch (this) {
-      case LanguageEnum.russian:
-        return 'Русский';
-      case LanguageEnum.english:
-        return 'Английский';
-      case LanguageEnum.deutsche:
-        return 'Немецкий';
-    }
-  }
-}
-
-void filtrationFromRating(List<NewFilm> films, double value) {
-  List ratingFilms = [];
-  for (var item in films) {
-    if (item.voteAverage >= value) {
-      ratingFilms.add(item.title);
-    }
-  }
-  print(ratingFilms);
-  return;
-}
-
-void main() {
-  var film = NewFilm(
-      id: '',
-      title: '',
-      picture: '',
-      voteAverage: 12,
-      releaseDate: '',
-      description: '',
-      language: 'russian');
-  var output = film.runConvert();
-  final pro = output?.nameOfLanguage;
-  debugPrint(pro);
-
-  List<NewFilm> listOfFilms = [
-    NewFilm(
-        id: '',
-        title: 'Harry Potter',
-        picture: '',
-        voteAverage: 10.0,
-        releaseDate: '',
-        description: '',
-        language: 'english'),
-    NewFilm(
-        id: '',
-        title: 'Silicon Valle',
-        picture: '',
-        voteAverage: 15,
-        releaseDate: '',
-        description: '',
-        language: 'english'),
-    NewFilm(
-        id: '',
-        title: 'Bad film',
-        picture: '',
-        voteAverage: 2.0,
-        releaseDate: '',
-        description: '',
-        language: 'english'),
-  ];
-
-  filtrationFromRating(listOfFilms, 8);
 }
