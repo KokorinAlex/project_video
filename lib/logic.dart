@@ -4,16 +4,17 @@ enum LanguageEnum {
   russian,
   english,
   deutsche,
+  unknown,
 }
 
 abstract class Films {
-  String id;
-  String title;
-  String picture;
-  double voteAverage;
-  String releaseDate;
-  String description;
-  String language;
+  final int id;
+  final String title;
+  final String picture;
+  final double voteAverage;
+  final String releaseDate;
+  final String description;
+  final String language;
 
   Films(
       {required this.id,
@@ -23,10 +24,8 @@ abstract class Films {
       required this.releaseDate,
       required this.description,
       required this.language});
-}
 
-mixin Converting {
-  LanguageEnum? changeLanguage(String language) {
+  LanguageEnum changeLanguage(String language) {
     switch (language) {
       case 'russian':
         return LanguageEnum.russian;
@@ -35,14 +34,29 @@ mixin Converting {
       case 'deutsche':
         return LanguageEnum.deutsche;
       default:
-        return null;
+        return LanguageEnum.unknown;
+    }
+  }
+}
+
+mixin Converting {
+  LanguageEnum changeLanguage(String language) {
+    switch (language) {
+      case 'russian':
+        return LanguageEnum.russian;
+      case 'english':
+        return LanguageEnum.english;
+      case 'deutsche':
+        return LanguageEnum.deutsche;
+      default:
+        return LanguageEnum.unknown;
     }
   }
 }
 
 class NewFilm extends Films with Converting {
   NewFilm(
-      {required String id,
+      {required int id,
       required String title,
       required String picture,
       required double voteAverage,
@@ -63,32 +77,64 @@ class NewFilm extends Films with Converting {
   }
 }
 
-Future<List> returnList() async {
+Future<List<NewFilm>> returnList() async {
+  await Future.delayed(const Duration(seconds: 1));
   return [
     NewFilm(
-        id: '',
-        title: 'Harry Potter',
-        picture: '',
-        voteAverage: 10.0,
-        releaseDate: '',
-        description: '',
-        language: 'english'),
+      language: 'russian',
+      id: 0,
+      title: 'Брат',
+      voteAverage: 8.3,
+      picture:
+          'https://avatars.mds.yandex.net/get-kinopoisk-image/1704946/e9008e2f-433f-43b0-b9b8-2ea8e3fb6c9b/600x900',
+      releaseDate: '1997',
+      description:
+          'Дембель Данила Багров защищает слабых в Петербурге 1990-х. Фильм, сделавший Сергея Бодрова народным героем.',
+    ),
     NewFilm(
-        id: '',
-        title: 'Silicon Valle',
-        picture: '',
-        voteAverage: 15,
-        releaseDate: '',
-        description: '',
-        language: 'english'),
+      language: 'russian',
+      id: 1,
+      title: 'Служебный роман',
+      voteAverage: 8.3,
+      picture:
+          'https://avatars.mds.yandex.net/get-kinopoisk-image/1777765/fd4e75bb-a6fe-46ef-86cd-0f470334fcbd/600x900',
+      releaseDate: '1977',
+      description:
+          'Робкий холостяк решает приударить за строгой начальницей. Комедия Эльдара Рязанова, классика советского кино.',
+    ),
     NewFilm(
-        id: '',
-        title: 'Bad film',
-        picture: '',
-        voteAverage: 2.0,
-        releaseDate: '',
-        description: '',
-        language: 'english'),
+      language: 'english',
+      id: 2,
+      title: 'Волк с Уолл-стрит',
+      voteAverage: 7.9,
+      picture:
+          'https://avatars.mds.yandex.net/get-kinopoisk-image/1600647/c5876e81-9dec-43e2-923f-fee2fca85e21/576x',
+      releaseDate: '2013',
+      description:
+          'Восхождение циника-гедониста на бизнес-олимп 1980-х. Блистательный тандем Леонардо ДиКаприо и Мартина Скорсезе',
+    ),
+    NewFilm(
+      language: 'deutsche',
+      id: 3,
+      title: 'Бриллиантовая рука',
+      voteAverage: 8.5,
+      picture:
+          'https://avatars.mds.yandex.net/get-kinopoisk-image/1600647/a419d20d-4ae6-4c7c-91b3-c38ef9ca1ffe/600x900',
+      releaseDate: '1968',
+      description:
+          'Контрабандисты гоняются за примерным семьянином. Народная комедия с элементами абсурда от Леонида Гайдая',
+    ),
+    NewFilm(
+      language: 'english',
+      id: 4,
+      title: 'Интерстеллар',
+      voteAverage: 8.6,
+      picture:
+          'https://avatars.mds.yandex.net/get-kinopoisk-image/1600647/430042eb-ee69-4818-aed0-a312400a26bf/600x900',
+      releaseDate: '2014',
+      description:
+          'Фантастический эпос про задыхающуюся Землю, космические полеты и парадоксы времени. «Оскар» за спецэффекты',
+    ),
   ];
   // List ret = [];
   // ret.add(itemFilm);
@@ -96,7 +142,7 @@ Future<List> returnList() async {
 }
 
 extension LanguageExtension on LanguageEnum {
-  String get nameOfLanguage {
+  String toPrettyString() {
     switch (this) {
       case LanguageEnum.russian:
         return 'Русский';
@@ -104,6 +150,8 @@ extension LanguageExtension on LanguageEnum {
         return 'Английский';
       case LanguageEnum.deutsche:
         return 'Немецкий';
+      case LanguageEnum.unknown:
+        return 'Неизвестный язык';
     }
   }
 }
@@ -115,7 +163,4 @@ void filtrationFromRating(List<NewFilm> films, double value) {
       ratingFilms.add(item.title);
     }
   }
-  // ignore: avoid_print
-  print(ratingFilms);
-  return;
 }
