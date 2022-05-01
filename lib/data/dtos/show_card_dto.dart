@@ -35,7 +35,6 @@ class ShowCardDataDTO {
   @JsonKey(name: 'rating')
   final ShowCardDataAverageDTO? voteAverage;
 
-  @JsonKey(name: '')
   ShowCardDataDTO({
     required this.id,
     required this.title,
