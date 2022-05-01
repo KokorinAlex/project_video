@@ -72,7 +72,7 @@ class _FilterPageState extends State<FilterPage> {
     ratingFilms.clear();
     final double rating = double.parse(value);
     for (var item in films) {
-      if (item.voteAverage >= rating) {
+      if (item.voteAverage! >= rating) {
         ratingFilms.add(item);
       }
     }

@@ -14,10 +14,10 @@ class FilmTile extends StatelessWidget {
       : super(key: key);
   final int id;
   final String title;
-  final String picture;
-  final double voteAverage;
-  final String releaseDate;
-  final String description;
+  final String? picture;
+  final double? voteAverage;
+  final String? releaseDate;
+  final String? description;
 
   factory FilmTile.fromModel({required FilmCardModel model, Key? key}) {
     return FilmTile(
@@ -35,7 +35,7 @@ class FilmTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: <Widget>[
-        Expanded(child: ImageNetwork(picture)),
+        Expanded(child: ImageNetwork(picture!)),
         Expanded(
           flex: 2,
           child: Padding(
@@ -44,7 +44,7 @@ class FilmTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  title,
+                  description!,
                   style: Theme.of(context).textTheme.headline5,
                 ),
                 Padding(
@@ -59,12 +59,12 @@ class FilmTile extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        voteAverage.toStringAsFixed(1),
+                        voteAverage!.toStringAsFixed(1),
                         style: TextStyle(
                           fontSize: 16,
-                          color: voteAverage < 4
+                          color: voteAverage! < 4
                               ? Colors.red
-                              : voteAverage >= 8
+                              : voteAverage! >= 8
                                   ? Colors.green
                                   : Colors.black,
                         ),
@@ -79,7 +79,7 @@ class FilmTile extends StatelessWidget {
                     style: Theme.of(context).textTheme.headline6,
                   ),
                 ),
-                Text(description),
+                Text(description!),
               ],
             ),
           ),

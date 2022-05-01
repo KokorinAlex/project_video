@@ -33,10 +33,10 @@ class FilmCard extends StatelessWidget {
 
   final int id;
   final String title;
-  final String picture;
-  final double voteAverage;
-  final String releaseDate;
-  final String description;
+  final String? picture;
+  final double? voteAverage;
+  final String? releaseDate;
+  final String? description;
 
   @override
   Widget build(BuildContext context) {
@@ -57,14 +57,14 @@ class FilmCard extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20),
               child: ImageNetwork(
-                picture,
+                picture!,
               ),
             ),
           ),
           Positioned(
             right: 4,
             top: 4,
-            child: _RatingChip(voteAverage),
+            child: _RatingChip(voteAverage!),
           ),
           Positioned(
             left: 4,
@@ -78,8 +78,8 @@ class FilmCard extends StatelessWidget {
               'More',
               onPressed: () {
                 Navigator.pushNamed(context, '/details',
-                    arguments: DetailsArguments(id, title, picture, voteAverage,
-                        releaseDate, description));
+                    arguments: DetailsArguments(id, title, picture!,
+                        voteAverage!, releaseDate!, description!));
               },
             ),
           ),
