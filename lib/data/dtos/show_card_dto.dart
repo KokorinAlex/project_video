@@ -2,17 +2,12 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'show_card_dto.g.dart';
 
-/// Корневой элемент Json
 @JsonSerializable()
 class ShowCardDTO {
-  @JsonKey(name: 'score')
-  final double? score;
-
   @JsonKey(name: 'show')
   final ShowCardDataDTO? show;
 
   ShowCardDTO({
-    this.score,
     this.show,
   });
 
@@ -20,7 +15,6 @@ class ShowCardDTO {
       _$ShowCardDTOFromJson(json);
 }
 
-/// элемент show:
 @JsonSerializable()
 class ShowCardDataDTO {
   @JsonKey(name: 'id', defaultValue: 0)
@@ -50,7 +44,6 @@ class ShowCardDataDTO {
       _$ShowCardDataDTOFromJson(json);
 }
 
-/// элемент image:
 @JsonSerializable()
 class ShowCardDataImageDTO {
   @JsonKey(name: 'original', defaultValue: '')
