@@ -27,6 +27,10 @@ ShowCardDataDTO _$ShowCardDataDTOFromJson(Map<String, dynamic> json) =>
               json['image'] as Map<String, dynamic>),
       releaseDate: json['premiered'] as String?,
       description: json['summary'] as String?,
+      voteAverage: json['rating'] == null
+          ? null
+          : ShowCardDataAverageDTO.fromJson(
+              json['rating'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$ShowCardDataDTOToJson(ShowCardDataDTO instance) =>
@@ -36,6 +40,7 @@ Map<String, dynamic> _$ShowCardDataDTOToJson(ShowCardDataDTO instance) =>
       'image': instance.picture,
       'premiered': instance.releaseDate,
       'summary': instance.description,
+      'rating': instance.voteAverage,
     };
 
 ShowCardDataImageDTO _$ShowCardDataImageDTOFromJson(
@@ -48,4 +53,16 @@ Map<String, dynamic> _$ShowCardDataImageDTOToJson(
         ShowCardDataImageDTO instance) =>
     <String, dynamic>{
       'original': instance.original,
+    };
+
+ShowCardDataAverageDTO _$ShowCardDataAverageDTOFromJson(
+        Map<String, dynamic> json) =>
+    ShowCardDataAverageDTO(
+      average: (json['average'] as num?)?.toDouble() ?? 0,
+    );
+
+Map<String, dynamic> _$ShowCardDataAverageDTOToJson(
+        ShowCardDataAverageDTO instance) =>
+    <String, dynamic>{
+      'average': instance.average,
     };

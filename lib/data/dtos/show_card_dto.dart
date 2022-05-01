@@ -32,12 +32,17 @@ class ShowCardDataDTO {
   @JsonKey(name: 'summary')
   final String? description;
 
+  @JsonKey(name: 'rating')
+  final ShowCardDataAverageDTO? voteAverage;
+
+  @JsonKey(name: '')
   ShowCardDataDTO({
     required this.id,
     required this.title,
     required this.picture,
     this.releaseDate,
     this.description,
+    this.voteAverage,
   });
 
   factory ShowCardDataDTO.fromJson(Map<String, dynamic> json) =>
@@ -55,4 +60,15 @@ class ShowCardDataImageDTO {
 
   factory ShowCardDataImageDTO.fromJson(Map<String, dynamic> json) =>
       _$ShowCardDataImageDTOFromJson(json);
+}
+
+@JsonSerializable()
+class ShowCardDataAverageDTO {
+  @JsonKey(name: 'average', defaultValue: 0)
+  final double? average;
+
+  ShowCardDataAverageDTO({this.average});
+
+  factory ShowCardDataAverageDTO.fromJson(Map<String, dynamic> json) =>
+      _$ShowCardDataAverageDTOFromJson(json);
 }
