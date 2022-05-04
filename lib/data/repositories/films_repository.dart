@@ -37,14 +37,10 @@ class FilmsRepository {
       final filmsModel = <FilmCardModel>[];
       for (final dto in dtos) {
         filmsModel.add(dto.toDomain());
-
-        final HomeModel model = HomeModel(results: filmsModel);
-        return model;
       }
+      final HomeModel model = HomeModel(results: filmsModel);
+      return model;
     } on DioError catch (error) {
-      // todo отправка в Firebase Crashlytics
-
-      // При ошибке покажем ее в диалоге
       final statusCode = error.response?.statusCode;
       showErrorDialog(context, error: statusCode?.toString() ?? '');
       return null;
