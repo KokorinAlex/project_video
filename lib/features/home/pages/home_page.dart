@@ -121,7 +121,7 @@ class FilmList extends StatelessWidget {
     FilmCardModel(
       id: 2,
       title: 'Волк с Уолл-стрит',
-      voteAverage: 7.9,
+      // voteAverage: 7.9,
       picture:
           'https://avatars.mds.yandex.net/get-kinopoisk-image/1600647/c5876e81-9dec-43e2-923f-fee2fca85e21/576x',
       releaseDate: '2013',

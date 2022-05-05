@@ -44,7 +44,7 @@ class FilmTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  description!,
+                  title,
                   style: Theme.of(context).textTheme.headline5,
                 ),
                 Padding(
@@ -59,14 +59,17 @@ class FilmTile extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        voteAverage!.toStringAsFixed(1),
+                        voteAverage?.toStringAsFixed(1) ??
+                            'Рейтинг отсутствует',
                         style: TextStyle(
                           fontSize: 16,
-                          color: voteAverage! < 4
-                              ? Colors.red
-                              : voteAverage! >= 8
-                                  ? Colors.green
-                                  : Colors.black,
+                          color: voteAverage == null
+                              ? Colors.blue
+                              : voteAverage! < 4
+                                  ? Colors.red
+                                  : voteAverage! >= 8
+                                      ? Colors.green
+                                      : Colors.black,
                         ),
                       ),
                     ],
