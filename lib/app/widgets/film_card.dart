@@ -4,7 +4,6 @@ import 'package:project_video/app/models/film_card_model.dart';
 import 'package:project_video/app/widgets/details_page.dart';
 import 'package:project_video/app/widgets/like_button.dart';
 import 'package:project_video/app/widgets/primary_button.dart';
-import 'package:project_video/features/home/widgets/image_network.dart';
 import 'package:flutter/material.dart';
 
 class FilmCard extends StatelessWidget {
@@ -71,7 +70,7 @@ class FilmCard extends StatelessWidget {
             top: 4,
             child: _RatingChip(voteAverage!),
           ),
-          Positioned(
+          const Positioned(
             left: 4,
             child: LikeButton(),
           ),
