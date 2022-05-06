@@ -5,7 +5,7 @@ import 'package:project_video/app/models/home_model.dart';
 import 'package:project_video/app/widgets/film_card.dart';
 import 'package:project_video/data/repositories/films_repository.dart';
 import 'package:project_video/features/settings/pages/setting_page.dart';
-
+import "dart:math";
 import 'package:flutter/material.dart';
 
 class CatalogPage extends StatelessWidget {
@@ -64,50 +64,53 @@ class _FilmGridState extends State<FilmGrid> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      Padding(
-        padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
-        child: TextField(
-          controller: textController,
-          maxLines: 1,
-          decoration: const InputDecoration(
-            labelText: MovieLocal.search,
-            filled: true,
-            fillColor: Colors.white,
+    return RefreshIndicator(
+      onRefresh: _pullToRefresh,
+      child: Column(children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
+          child: TextField(
+            controller: textController,
+            maxLines: 1,
+            decoration: const InputDecoration(
+              labelText: MovieLocal.search,
+              filled: true,
+              fillColor: Colors.white,
+            ),
+            onChanged: _onSearchFieldTextChanged,
           ),
-          onChanged: _onSearchFieldTextChanged,
         ),
-      ),
-      FutureBuilder<HomeModel?>(
-        future: dataLoadingState,
-        builder: (BuildContext context, AsyncSnapshot<HomeModel?> data) {
-          return data.connectionState != ConnectionState.done
-              ? const Center(child: CircularProgressIndicator())
-              : data.hasData
-                  ? data.data?.results?.isNotEmpty == true
-                      ? Expanded(
-                          child: GridView.builder(
-                            itemBuilder: (BuildContext context, int index) {
-                              return Padding(
-                                padding: const EdgeInsets.all(6.0),
-                                child: FilmCard.fromModel(
-                                  model: data.data!.results![index],
-                                ),
-                              );
-                            },
-                            itemCount: data.data?.results?.length,
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              childAspectRatio: 2 / 3,
+        FutureBuilder<HomeModel?>(
+          future: dataLoadingState,
+          builder: (BuildContext context, AsyncSnapshot<HomeModel?> data) {
+            return data.connectionState != ConnectionState.done
+                ? const Center(child: CircularProgressIndicator())
+                : data.hasData
+                    ? data.data?.results?.isNotEmpty == true
+                        ? Expanded(
+                            child: GridView.builder(
+                              itemBuilder: (BuildContext context, int index) {
+                                return Padding(
+                                  padding: const EdgeInsets.all(6.0),
+                                  child: FilmCard.fromModel(
+                                    model: data.data!.results![index],
+                                  ),
+                                );
+                              },
+                              itemCount: data.data?.results?.length,
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                childAspectRatio: 2 / 3,
+                              ),
                             ),
-                          ),
-                        )
-                      : const _Empty()
-                  : const _Error();
-        },
-      ),
-    ]);
+                          )
+                        : const _Empty()
+                    : const _Error();
+          },
+        ),
+      ]),
+    );
   }
 
   void _onSearchFieldTextChanged(String text) {
@@ -118,6 +121,24 @@ class _FilmGridState extends State<FilmGrid> {
       );
       setState(() {});
     });
+  }
+
+  Future<void> _pullToRefresh() async {
+    List refresh = [
+      'bad',
+      'girl',
+      'throne',
+      'game',
+      'father',
+      'family',
+      'sister'
+    ];
+    var i = refresh[Random().nextInt(refresh.length)];
+    dataLoadingState = FilmsRepository.loadData(
+      context,
+      q: '$i',
+    );
+    setState(() {});
   }
 }
 
