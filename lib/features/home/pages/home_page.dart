@@ -14,12 +14,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  Icon customIcon = Icon(
+  Icon customIcon = const Icon(
     Icons.search,
     size: 28,
   );
 
-  Widget customSearchBar = Text('Films');
+  Widget customSearchBar = const Text('Films');
 
   @override
   Widget build(BuildContext context) {
@@ -35,18 +35,18 @@ class _HomePageState extends State<HomePage> {
               onPressed: () {
                 setState(() {
                   if (customIcon.icon == Icons.search) {
-                    customIcon = Icon(Icons.cancel);
+                    customIcon = const Icon(Icons.cancel);
                     customSearchBar = ListTile(
                       trailing: IconButton(
-                        icon: Icon(Icons.send, color: Colors.white),
+                        icon: const Icon(Icons.send, color: Colors.white),
                         onPressed: () {},
                       ),
-                      leading: Icon(
+                      leading: const Icon(
                         Icons.search,
                         color: Colors.white,
                         size: 28,
                       ),
-                      title: TextField(
+                      title: const TextField(
                         cursorColor: Colors.white,
                         decoration: InputDecoration(
                           hintText: 'Enter the name of film',

@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:project_video/app/constants.dart';
-import 'package:project_video/features/home/widgets/image_network.dart';
 
 class DetailsPage extends StatelessWidget {
   const DetailsPage({required this.arguments, Key? key}) : super(key: key);

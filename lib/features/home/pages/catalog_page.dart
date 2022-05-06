@@ -1,6 +1,5 @@
 import 'package:project_video/app/constants.dart';
 import 'package:project_video/app/delayed_action.dart';
-import 'package:project_video/app/models/film_card_model.dart';
 import 'package:project_video/app/models/home_model.dart';
 import 'package:project_video/app/widgets/film_card.dart';
 import 'package:project_video/data/repositories/films_repository.dart';
