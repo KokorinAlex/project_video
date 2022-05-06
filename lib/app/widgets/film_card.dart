@@ -1,3 +1,5 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:project_video/app/constants.dart';
 import 'package:project_video/app/models/film_card_model.dart';
 import 'package:project_video/app/widgets/details_page.dart';
 import 'package:project_video/app/widgets/like_button.dart';
@@ -56,8 +58,11 @@ class FilmCard extends StatelessWidget {
           Positioned.fill(
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20),
-              child: ImageNetwork(
-                picture!,
+              child: CachedNetworkImage(
+                imageUrl: picture!,
+                errorWidget: (_, __, ___) =>
+                    Image.network(MovieQuery.pisecImageUrl),
+                cacheManager: MoviePictures.pictureCache,
               ),
             ),
           ),
@@ -77,9 +82,18 @@ class FilmCard extends StatelessWidget {
             child: PrimaryButton(
               'More',
               onPressed: () {
-                Navigator.pushNamed(context, '/details',
-                    arguments: DetailsArguments(id, title, picture!,
-                        voteAverage!, releaseDate!, description!));
+                Navigator.pushNamed(
+                  context,
+                  '/details',
+                  arguments: DetailsArguments(
+                    id,
+                    title,
+                    picture!,
+                    voteAverage ?? 0,
+                    releaseDate ?? ' ',
+                    description ?? ' ',
+                  ),
+                );
               },
             ),
           ),
