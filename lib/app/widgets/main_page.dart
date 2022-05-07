@@ -7,14 +7,14 @@ class MainPage extends StatefulWidget {
 
   static const List<_Tab> _tabs = <_Tab>[
     _Tab(
-      icon: Icon(Icons.local_movies_outlined),
-      label: 'Feed',
-      page: HomePage(title: 'Films'),
-    ),
-    _Tab(
       icon: Icon(Icons.movie_filter),
       label: 'Catalog',
       page: CatalogPage(title: 'Catalog'),
+    ),
+    _Tab(
+      icon: Icon(Icons.local_movies_outlined),
+      label: 'Favourite',
+      page: HomePage(title: 'Favourite'),
     ),
   ];
 

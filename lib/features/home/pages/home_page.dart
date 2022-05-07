@@ -4,22 +4,10 @@ import 'package:project_video/features/settings/pages/setting_page.dart';
 
 import 'package:flutter/material.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends StatelessWidget {
   const HomePage({required this.title, Key? key}) : super(key: key);
 
   final String title;
-
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  Icon customIcon = const Icon(
-    Icons.search,
-    size: 28,
-  );
-
-  Widget customSearchBar = const Text('Films');
 
   @override
   Widget build(BuildContext context) {
@@ -29,45 +17,8 @@ class _HomePageState extends State<HomePage> {
           onPressed: () {},
           icon: const Icon(Icons.menu),
         ),
-        title: customSearchBar,
+        title: Text(title),
         actions: [
-          IconButton(
-              onPressed: () {
-                setState(() {
-                  if (customIcon.icon == Icons.search) {
-                    customIcon = const Icon(Icons.cancel);
-                    customSearchBar = ListTile(
-                      trailing: IconButton(
-                        icon: const Icon(Icons.send, color: Colors.white),
-                        onPressed: () {},
-                      ),
-                      leading: const Icon(
-                        Icons.search,
-                        color: Colors.white,
-                        size: 28,
-                      ),
-                      title: const TextField(
-                        cursorColor: Colors.white,
-                        decoration: InputDecoration(
-                          hintText: 'Enter the name of film',
-                          hintStyle: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                          ),
-                          border: InputBorder.none,
-                        ),
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                    );
-                  } else {
-                    customIcon = const Icon(Icons.search);
-                    customSearchBar = const Text('Films');
-                  }
-                });
-              },
-              icon: customIcon),
           IconButton(
             onPressed: () {
               Navigator.pushNamed(
