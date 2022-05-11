@@ -1,8 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:project_video/app/constants.dart';
 import 'package:project_video/app/models/film_card_model.dart';
 import 'package:project_video/app/widgets/details_page.dart';
 import 'package:project_video/app/widgets/like_button.dart';
 import 'package:project_video/app/widgets/primary_button.dart';
-import 'package:project_video/features/home/widgets/image_network.dart';
 import 'package:flutter/material.dart';
 
 class FilmCard extends StatelessWidget {
@@ -33,10 +34,10 @@ class FilmCard extends StatelessWidget {
 
   final int id;
   final String title;
-  final String picture;
-  final double voteAverage;
-  final String releaseDate;
-  final String description;
+  final String? picture;
+  final double? voteAverage;
+  final String? releaseDate;
+  final String? description;
 
   @override
   Widget build(BuildContext context) {
@@ -56,17 +57,20 @@ class FilmCard extends StatelessWidget {
           Positioned.fill(
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20),
-              child: ImageNetwork(
-                picture,
+              child: CachedNetworkImage(
+                imageUrl: picture!,
+                errorWidget: (_, __, ___) =>
+                    Image.network(MovieQuery.pisecImageUrl),
+                cacheManager: MoviePictures.pictureCache,
               ),
             ),
           ),
           Positioned(
             right: 4,
             top: 4,
-            child: _RatingChip(voteAverage),
+            child: _RatingChip(voteAverage!),
           ),
-          Positioned(
+          const Positioned(
             left: 4,
             child: LikeButton(),
           ),
@@ -77,9 +81,18 @@ class FilmCard extends StatelessWidget {
             child: PrimaryButton(
               'More',
               onPressed: () {
-                Navigator.pushNamed(context, '/details',
-                    arguments: DetailsArguments(id, title, picture, voteAverage,
-                        releaseDate, description));
+                Navigator.pushNamed(
+                  context,
+                  '/details',
+                  arguments: DetailsArguments(
+                    id,
+                    title,
+                    picture!,
+                    voteAverage ?? 0,
+                    releaseDate ?? ' ',
+                    description ?? ' ',
+                  ),
+                );
               },
             ),
           ),

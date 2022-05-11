@@ -4,22 +4,10 @@ import 'package:project_video/features/settings/pages/setting_page.dart';
 
 import 'package:flutter/material.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends StatelessWidget {
   const HomePage({required this.title, Key? key}) : super(key: key);
 
   final String title;
-
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  Icon customIcon = Icon(
-    Icons.search,
-    size: 28,
-  );
-
-  Widget customSearchBar = Text('Films');
 
   @override
   Widget build(BuildContext context) {
@@ -29,45 +17,8 @@ class _HomePageState extends State<HomePage> {
           onPressed: () {},
           icon: const Icon(Icons.menu),
         ),
-        title: customSearchBar,
+        title: Text(title),
         actions: [
-          IconButton(
-              onPressed: () {
-                setState(() {
-                  if (customIcon.icon == Icons.search) {
-                    customIcon = Icon(Icons.cancel);
-                    customSearchBar = ListTile(
-                      trailing: IconButton(
-                        icon: Icon(Icons.send, color: Colors.white),
-                        onPressed: () {},
-                      ),
-                      leading: Icon(
-                        Icons.search,
-                        color: Colors.white,
-                        size: 28,
-                      ),
-                      title: TextField(
-                        cursorColor: Colors.white,
-                        decoration: InputDecoration(
-                          hintText: 'Enter the name of film',
-                          hintStyle: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                          ),
-                          border: InputBorder.none,
-                        ),
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                    );
-                  } else {
-                    customIcon = const Icon(Icons.search);
-                    customSearchBar = const Text('Films');
-                  }
-                });
-              },
-              icon: customIcon),
           IconButton(
             onPressed: () {
               Navigator.pushNamed(
@@ -121,7 +72,7 @@ class FilmList extends StatelessWidget {
     FilmCardModel(
       id: 2,
       title: 'Волк с Уолл-стрит',
-      voteAverage: 7.9,
+      // voteAverage: 7.9,
       picture:
           'https://avatars.mds.yandex.net/get-kinopoisk-image/1600647/c5876e81-9dec-43e2-923f-fee2fca85e21/576x',
       releaseDate: '2013',

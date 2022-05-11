@@ -1,5 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:project_video/features/home/widgets/image_network.dart';
+import 'package:flutter_html/flutter_html.dart';
+import 'package:project_video/app/constants.dart';
 
 class DetailsPage extends StatelessWidget {
   const DetailsPage({required this.arguments, Key? key}) : super(key: key);
@@ -27,7 +29,13 @@ class DetailsPage extends StatelessWidget {
             ),
             Expanded(
               flex: 2,
-              child: ImageNetwork(arguments.picture),
+              child: CachedNetworkImage(
+                imageUrl: arguments.picture,
+                fit: BoxFit.cover,
+                errorWidget: (_, __, ___) =>
+                    Image.network(MovieQuery.pisecImageUrl),
+                cacheManager: MoviePictures.pictureCache,
+              ),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -42,24 +50,27 @@ class DetailsPage extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    arguments.voteAverage.toStringAsFixed(1),
+                    arguments.voteAverage?.toStringAsFixed(1) ??
+                        'Рейтинг отсутствует',
                     style: TextStyle(
                       fontSize: 16,
-                      color: arguments.voteAverage < 4
-                          ? Colors.red
-                          : arguments.voteAverage >= 8
-                              ? Colors.green
-                              : Colors.black,
+                      color: arguments.voteAverage == null
+                          ? Colors.blue
+                          : arguments.voteAverage! < 4
+                              ? Colors.red
+                              : arguments.voteAverage! >= 8
+                                  ? Colors.green
+                                  : Colors.black,
                     ),
                   ),
                 ],
               ),
             ),
             Text(
-              'Дата выхода: ${arguments.releaseDate}',
+              'Дата выхода: ${arguments.releaseDate ?? '0'}',
               style: Theme.of(context).textTheme.headline6,
             ),
-            Text(arguments.description)
+            Html(data: arguments.description ?? '')
           ],
         ),
       ),
@@ -80,9 +91,9 @@ class DetailsArguments {
   final int id;
   final String title;
   final String picture;
-  final double voteAverage;
-  final String releaseDate;
-  final String description;
+  final double? voteAverage;
+  final String? releaseDate;
+  final String? description;
 }
 
 
