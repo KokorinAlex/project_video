@@ -27,8 +27,8 @@ class FilmsRepository {
       );
 
       final dtos = <ShowCardDTO>[];
-      final responceList = response.data as List<dynamic>;
-      for (final data in responceList) {
+      final responseList = response.data as List<dynamic>;
+      for (final data in responseList) {
         dtos.add(
           ShowCardDTO.fromJson(data as Map<String, dynamic>),
         );

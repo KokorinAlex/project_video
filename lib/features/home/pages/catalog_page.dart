@@ -164,22 +164,3 @@ class _Empty extends StatelessWidget {
     );
   }
 }
-
-
-
-
-// @override
-//   Widget build(BuildContext context) {
-//     return GridView.builder(
-//       itemBuilder: (BuildContext context, int index) {
-//         return Padding(
-//             padding: const EdgeInsets.all(6.0),
-//             child: FilmCard.fromModel(model: films[index % films.length]));
-//       },
-//       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-//         crossAxisCount: 2,
-//         childAspectRatio: 2 / 3,
-//       ),
-//     );
-//   }
-// }

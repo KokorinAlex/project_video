@@ -67,10 +67,10 @@ class DetailsPage extends StatelessWidget {
               ),
             ),
             Text(
-              'Дата выхода: ${arguments.releaseDate ?? '0'}',
+              'Дата выхода: ${arguments.releaseDate ?? 'Не указано'}',
               style: Theme.of(context).textTheme.headline6,
             ),
-            Html(data: arguments.description ?? '')
+            Html(data: arguments.description ?? 'Описание отсутствует')
           ],
         ),
       ),
