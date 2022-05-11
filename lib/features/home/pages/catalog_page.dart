@@ -1,8 +1,12 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_video/app/constants.dart';
 import 'package:project_video/app/delayed_action.dart';
 import 'package:project_video/app/models/home_model.dart';
 import 'package:project_video/app/widgets/film_card.dart';
 import 'package:project_video/data/repositories/films_repository.dart';
+import 'package:project_video/features/home/pages/bloc/catalog_bloc.dart';
+import 'package:project_video/features/home/pages/bloc/catalog_event.dart';
+import 'package:project_video/features/home/pages/bloc/catalog_state.dart';
 import 'package:project_video/features/settings/pages/setting_page.dart';
 import "dart:math";
 import 'package:flutter/material.dart';
@@ -23,7 +27,12 @@ class CatalogPage extends StatelessWidget {
         title: Text(title),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushNamed(
+                context,
+                '/filter',
+              );
+            },
             icon: const Icon(Icons.sort),
           ),
           IconButton(
@@ -38,87 +47,99 @@ class CatalogPage extends StatelessWidget {
           ),
         ],
       ),
-      body: const FilmGrid(),
+      body: BlocProvider<CatalogBloc>(
+          lazy: false,
+          create: (BuildContext context) =>
+              CatalogBloc(context.read<FilmsRepository>()),
+          child: const FilmGrid()),
     );
   }
 }
 
 class FilmGrid extends StatefulWidget {
   const FilmGrid({Key? key}) : super(key: key);
+  static final GlobalKey<State<StatefulWidget>> globalKey = GlobalKey();
 
   @override
   State<FilmGrid> createState() => _FilmGridState();
 }
 
 class _FilmGridState extends State<FilmGrid> {
-  Future<HomeModel?>? dataLoadingState;
   final TextEditingController textController = TextEditingController();
 
   @override
   void didChangeDependencies() {
-    dataLoadingState ??=
-        FilmsRepository.loadData(context, q: MovieQuery.initialQ);
+    context.read<CatalogBloc>().add(LoadDataEvent());
     super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
+      key: FilmGrid.globalKey,
       onRefresh: _pullToRefresh,
-      child: Column(children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
-          child: TextField(
-            controller: textController,
-            maxLines: 1,
-            decoration: const InputDecoration(
-              labelText: MovieLocal.search,
-              filled: true,
-              fillColor: Colors.white,
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
+            child: TextField(
+              controller: textController,
+              maxLines: 1,
+              decoration: const InputDecoration(
+                labelText: MovieLocal.search,
+                filled: true,
+                fillColor: Colors.white,
+              ),
+              onChanged: _onSearchFieldTextChanged,
             ),
-            onChanged: _onSearchFieldTextChanged,
           ),
-        ),
-        FutureBuilder<HomeModel?>(
-          future: dataLoadingState,
-          builder: (BuildContext context, AsyncSnapshot<HomeModel?> data) {
-            return data.connectionState != ConnectionState.done
-                ? const Center(child: CircularProgressIndicator())
-                : data.hasData
-                    ? data.data?.results?.isNotEmpty == true
-                        ? Expanded(
-                            child: GridView.builder(
-                              itemBuilder: (BuildContext context, int index) {
-                                return Padding(
-                                  padding: const EdgeInsets.all(6.0),
-                                  child: FilmCard.fromModel(
-                                    model: data.data!.results![index],
+          BlocBuilder<CatalogBloc, CatalogState>(
+            buildWhen: (oldState, newState) => oldState.data != newState.data,
+            builder: (context, state) {
+              return FutureBuilder<HomeModel?>(
+                future: state.data,
+                builder:
+                    (BuildContext context, AsyncSnapshot<HomeModel?> data) {
+                  return data.connectionState != ConnectionState.done
+                      ? const Center(child: CircularProgressIndicator())
+                      : data.hasData
+                          ? data.data?.results?.isNotEmpty == true
+                              ? Expanded(
+                                  child: GridView.builder(
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      return Padding(
+                                        padding: const EdgeInsets.all(6.0),
+                                        child: FilmCard.fromModel(
+                                          model: data.data!.results![index],
+                                          key: ValueKey<int>(
+                                              data.data?.results?[index].id ??
+                                                  -1),
+                                        ),
+                                      );
+                                    },
+                                    itemCount: data.data?.results?.length,
+                                    gridDelegate:
+                                        const SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 2,
+                                      childAspectRatio: 2 / 3,
+                                    ),
                                   ),
-                                );
-                              },
-                              itemCount: data.data?.results?.length,
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                childAspectRatio: 2 / 3,
-                              ),
-                            ),
-                          )
-                        : const _Empty()
-                    : const _Error();
-          },
-        ),
-      ]),
+                                )
+                              : const _Empty()
+                          : const _Error();
+                },
+              );
+            },
+          ),
+        ],
+      ),
     );
   }
 
   void _onSearchFieldTextChanged(String text) {
     DelayedAction.run(() {
-      dataLoadingState = FilmsRepository.loadData(
-        context,
-        q: text.isNotEmpty ? text : MovieQuery.initialQ,
-      );
-      setState(() {});
+      context.read<CatalogBloc>().add(SearchChangedEvent(search: text));
     });
   }
 
@@ -133,11 +154,7 @@ class _FilmGridState extends State<FilmGrid> {
       'sister'
     ];
     var i = refresh[Random().nextInt(refresh.length)];
-    dataLoadingState = FilmsRepository.loadData(
-      context,
-      q: '$i',
-    );
-    setState(() {});
+    context.read<CatalogBloc>().add(SearchChangedEvent(search: i));
   }
 }
 
