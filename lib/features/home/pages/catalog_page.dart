@@ -126,8 +126,8 @@ class _FilmGridState extends State<FilmGrid> {
                                     ),
                                   ),
                                 )
-                              : const _Empty()
-                          : const _Error();
+                              : const Empty()
+                          : const Error();
                 },
               );
             },
@@ -158,8 +158,8 @@ class _FilmGridState extends State<FilmGrid> {
   }
 }
 
-class _Error extends StatelessWidget {
-  const _Error({Key? key}) : super(key: key);
+class Error extends StatelessWidget {
+  const Error({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -170,8 +170,8 @@ class _Error extends StatelessWidget {
   }
 }
 
-class _Empty extends StatelessWidget {
-  const _Empty({Key? key}) : super(key: key);
+class Empty extends StatelessWidget {
+  const Empty({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
