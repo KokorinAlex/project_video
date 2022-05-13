@@ -1,6 +1,8 @@
 import 'package:project_video/app/widgets/details_page.dart';
 import 'package:project_video/app/widgets/main_page.dart';
+import 'package:project_video/app/widgets/not_found_page.dart';
 import 'package:project_video/features/filter/pages/filter_page.dart';
+
 import 'package:project_video/features/filter/widgets/filtering_by_rating.dart';
 
 import 'package:project_video/features/settings/pages/setting_page.dart';
@@ -21,9 +23,6 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.deepPurple,
       ),
       initialRoute: '/',
-      routes: {
-        '/': (context) => const MainPage(),
-      },
       onGenerateRoute: (settings) {
         if (settings.name == '/') {
           return MaterialPageRoute(
@@ -32,7 +31,7 @@ class MyApp extends StatelessWidget {
             },
           );
         }
-        if (settings.name == '/filter') {
+        if (settings.name == FilterPage.path) {
           return MaterialPageRoute(
             builder: (context) {
               return const FilterPage();
@@ -74,7 +73,9 @@ class MyApp extends StatelessWidget {
             },
           );
         }
-        return null;
+        return MaterialPageRoute(
+          builder: (_) => const NotFoundPage(),
+        );
       },
     );
   }

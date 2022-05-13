@@ -2,8 +2,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_video/data/repositories/films_repository.dart';
 import 'package:project_video/error_bloc/error_bloc.dart';
 import 'package:project_video/error_bloc/error_event.dart';
-import 'package:project_video/features/home/pages/catalog_page.dart';
 import 'package:project_video/features/home/pages/home_page.dart';
+import 'package:project_video/features/home/pages/favourite_page.dart';
 import 'package:flutter/material.dart';
 
 class MainPage extends StatefulWidget {
@@ -13,12 +13,12 @@ class MainPage extends StatefulWidget {
     _Tab(
       icon: Icon(Icons.movie_filter),
       label: 'Catalog',
-      page: CatalogPage(title: 'Catalog'),
+      page: HomePage(title: 'Catalog'),
     ),
     _Tab(
       icon: Icon(Icons.local_movies_outlined),
       label: 'Favourite',
-      page: HomePage(title: 'Favourite'),
+      page: FavouritePage(title: 'Favourite'),
     ),
   ];
 

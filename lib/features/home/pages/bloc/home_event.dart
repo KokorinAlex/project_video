@@ -1,13 +1,13 @@
 import 'package:equatable/equatable.dart';
 
-class CatalogEvent extends Equatable {
-  const CatalogEvent();
+class HomeEvent extends Equatable {
+  const HomeEvent();
 
   @override
   List<Object?> get props => [];
 }
 
-class SearchChangedEvent extends CatalogEvent {
+class SearchChangedEvent extends HomeEvent {
   final String search;
 
   const SearchChangedEvent({required this.search});
@@ -16,4 +16,4 @@ class SearchChangedEvent extends CatalogEvent {
   List<Object> get props => [search];
 }
 
-class LoadDataEvent extends CatalogEvent {}
+class LoadDataEvent extends HomeEvent {}
