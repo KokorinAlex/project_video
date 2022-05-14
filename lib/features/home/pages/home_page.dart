@@ -10,6 +10,7 @@ import 'package:project_video/features/home/pages/bloc/home_state.dart';
 import 'package:project_video/features/settings/pages/setting_page.dart';
 import "dart:math";
 import 'package:flutter/material.dart';
+import 'package:collection/collection.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({required this.title, Key? key}) : super(key: key);
@@ -94,7 +95,9 @@ class _FilmGridState extends State<FilmGrid> {
             ),
           ),
           BlocBuilder<HomeBloc, HomeState>(
-            buildWhen: (oldState, newState) => oldState.data != newState.data,
+            buildWhen: (oldState, newState) =>
+                oldState.data != newState.data ||
+                oldState.favouriteFilms != newState.favouriteFilms,
             builder: (context, state) {
               return FutureBuilder<HomeModel?>(
                 future: state.data,
@@ -108,10 +111,35 @@ class _FilmGridState extends State<FilmGrid> {
                                   child: GridView.builder(
                                     itemBuilder:
                                         (BuildContext context, int index) {
+                                      bool isSelected = false;
+                                      if (state.favouriteFilms?.isNotEmpty ==
+                                          true) {
+                                        var moviesFavourite = state
+                                            .favouriteFilms
+                                            ?.firstWhereOrNull((element) =>
+                                                element.id ==
+                                                data.data?.results?[index].id);
+                                        if (moviesFavourite != null) {
+                                          isSelected = true;
+                                        }
+                                      }
+
                                       return Padding(
                                         padding: const EdgeInsets.all(6.0),
-                                        child: FilmCard.fromModel(
-                                          model: data.data!.results![index],
+                                        child: FilmCard(
+                                          isSelected: isSelected,
+                                          onChangedFavourites: () {
+                                            isSelected = !isSelected;
+                                            //отправляем событие в блок
+                                            context.read<HomeBloc>().add(
+                                                  ChangedFavouritesEvent(
+                                                    model: data
+                                                        .data?.results?[index],
+                                                  ),
+                                                );
+                                          },
+                                          filmCardModel:
+                                              data.data!.results![index],
                                           key: ValueKey<int>(
                                               data.data?.results?[index].id ??
                                                   -1),

@@ -1,43 +1,23 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+
 import 'package:project_video/app/constants.dart';
 import 'package:project_video/app/models/film_card_model.dart';
 import 'package:project_video/app/widgets/details_page.dart';
 import 'package:project_video/app/widgets/like_button.dart';
 import 'package:project_video/app/widgets/primary_button.dart';
-import 'package:flutter/material.dart';
 
 class FilmCard extends StatelessWidget {
-  const FilmCard({
-    required this.id,
-    required this.title,
-    required this.picture,
-    required this.voteAverage,
-    required this.releaseDate,
-    required this.description,
-    Key? key,
-  }) : super(key: key);
+  final FilmCardModel? filmCardModel;
+  final VoidCallback? onChangedFavourites;
+  final bool isSelected;
 
-  factory FilmCard.fromModel({
-    required FilmCardModel model,
-    Key? key,
-  }) {
-    return FilmCard(
-      id: model.id,
-      title: model.title,
-      picture: model.picture,
-      voteAverage: model.voteAverage,
-      key: key,
-      description: model.description,
-      releaseDate: model.releaseDate,
-    );
-  }
-
-  final int id;
-  final String title;
-  final String? picture;
-  final double? voteAverage;
-  final String? releaseDate;
-  final String? description;
+  const FilmCard(
+      {Key? key,
+      this.filmCardModel,
+      this.onChangedFavourites,
+      required this.isSelected})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +38,7 @@ class FilmCard extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20),
               child: CachedNetworkImage(
-                imageUrl: picture!,
+                imageUrl: '${filmCardModel?.picture}',
                 errorWidget: (_, __, ___) =>
                     Image.network(MovieQuery.pisecImageUrl),
                 cacheManager: MoviePictures.pictureCache,
@@ -68,11 +48,16 @@ class FilmCard extends StatelessWidget {
           Positioned(
             right: 4,
             top: 4,
-            child: _RatingChip(voteAverage!),
+            child: _RatingChip(filmCardModel?.voteAverage),
           ),
-          const Positioned(
+          Positioned(
             left: 4,
-            child: LikeButton(),
+            child: LikeButton(
+              isSelected: isSelected,
+              onPressed: () {
+                onChangedFavourites?.call();
+              },
+            ),
           ),
           Positioned(
             left: 8,
@@ -85,12 +70,12 @@ class FilmCard extends StatelessWidget {
                   context,
                   '/details',
                   arguments: DetailsArguments(
-                    id,
-                    title,
-                    picture!,
-                    voteAverage ?? 0,
-                    releaseDate ?? ' ',
-                    description ?? ' ',
+                    filmCardModel?.id,
+                    filmCardModel?.title,
+                    filmCardModel?.picture!,
+                    filmCardModel?.voteAverage ?? 0,
+                    filmCardModel?.releaseDate ?? ' ',
+                    filmCardModel?.description ?? ' ',
                   ),
                 );
               },
@@ -98,7 +83,7 @@ class FilmCard extends StatelessWidget {
           ),
           Align(
             alignment: Alignment.center,
-            child: NameFilm(title: title),
+            child: NameFilm(title: '${filmCardModel?.title}'),
           ),
         ],
       ),
@@ -109,7 +94,7 @@ class FilmCard extends StatelessWidget {
 class _RatingChip extends StatelessWidget {
   const _RatingChip(this.voteAverage, {Key? key}) : super(key: key);
 
-  final double voteAverage;
+  final double? voteAverage;
 
   @override
   Widget build(BuildContext context) {
@@ -119,7 +104,7 @@ class _RatingChip extends StatelessWidget {
         color: Colors.yellow,
       ),
       label: Text(
-        voteAverage.toStringAsFixed(1),
+        voteAverage?.toStringAsFixed(1) ?? 'Рейтинг отсутствует',
         style: Theme.of(context)
             .textTheme
             .headline6
@@ -160,3 +145,28 @@ class NameFilm extends StatelessWidget {
     );
   }
 }
+
+// class LikeButton extends StatelessWidget {
+//   const LikeButton({
+//     Key? key,
+//     required this.onPressed,
+//     required this.isSelected,
+//   }) : super(key: key);
+
+//   final void Function() onPressed;
+//   final bool isSelected;
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Center(
+//       child: IconButton(
+//         icon: Icon(isSelected ? Icons.favorite : Icons.heart_broken),
+//         color: isSelected ? Colors.red : Colors.white,
+//         onPressed: onPressed,
+//       ),
+//     );
+//   }
+// }
+
+
+
