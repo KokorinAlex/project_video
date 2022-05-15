@@ -149,8 +149,7 @@ class _FilmGridState extends State<FilmGrid> {
                                     itemCount: data.data?.results?.length,
                                     gridDelegate:
                                         const SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 2,
-                                      childAspectRatio: 2 / 3,
+                                      crossAxisCount: 1,
                                     ),
                                   ),
                                 )
