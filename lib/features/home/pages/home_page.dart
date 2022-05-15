@@ -3,7 +3,6 @@ import 'package:project_video/app/constants.dart';
 import 'package:project_video/app/delayed_action.dart';
 import 'package:project_video/app/models/home_model.dart';
 import 'package:project_video/app/widgets/film_card.dart';
-import 'package:project_video/data/repositories/films_repository.dart';
 import 'package:project_video/features/home/pages/bloc/home_bloc.dart';
 import 'package:project_video/features/home/pages/bloc/home_event.dart';
 import 'package:project_video/features/home/pages/bloc/home_state.dart';
