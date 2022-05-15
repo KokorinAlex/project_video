@@ -130,7 +130,7 @@ class _FilmGridState extends State<FilmGrid> {
                                           isSelected: isSelected,
                                           onChangedFavourites: () {
                                             isSelected = !isSelected;
-                                            //отправляем событие в блок
+
                                             context.read<HomeBloc>().add(
                                                   ChangedFavouritesEvent(
                                                     model: data

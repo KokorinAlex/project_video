@@ -1,8 +1,16 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:project_video/app/constants.dart';
 import 'package:project_video/app/models/film_card_model.dart';
-import 'package:project_video/app/widgets/film_tile.dart';
+import 'package:project_video/app/widgets/film_card.dart';
+import 'package:project_video/data/repositories/films_repository.dart';
+import 'package:project_video/error_bloc/error_bloc.dart';
+import 'package:project_video/error_bloc/error_event.dart';
 import 'package:project_video/features/filter/pages/filter_page.dart';
+import 'package:project_video/features/home/pages/bloc/home_bloc.dart';
+import 'package:project_video/features/home/pages/bloc/home_event.dart';
+import 'package:project_video/features/home/pages/bloc/home_state.dart';
 import 'package:project_video/features/settings/pages/setting_page.dart';
-
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 class FavouritePage extends StatelessWidget {
@@ -41,74 +49,103 @@ class FavouritePage extends StatelessWidget {
           ),
         ],
       ),
-      body: const FilmList(),
+      body: BlocProvider<HomeBloc>(
+          lazy: false,
+          create: (BuildContext context) =>
+              HomeBloc(context.read<FilmsRepository>()),
+          child: const FilmList()),
     );
   }
 }
 
-class FilmList extends StatelessWidget {
+class FilmList extends StatefulWidget {
   const FilmList({Key? key}) : super(key: key);
 
-  static const List<FilmCardModel> films = <FilmCardModel>[
-    FilmCardModel(
-      id: 0,
-      title: 'Брат',
-      voteAverage: 8.3,
-      picture:
-          'https://avatars.mds.yandex.net/get-kinopoisk-image/1704946/e9008e2f-433f-43b0-b9b8-2ea8e3fb6c9b/600x900',
-      releaseDate: '1997',
-      description:
-          'Дембель Данила Багров защищает слабых в Петербурге 1990-х. Фильм, сделавший Сергея Бодрова народным героем.',
-    ),
-    FilmCardModel(
-      id: 1,
-      title: 'Служебный роман',
-      voteAverage: 8.3,
-      picture:
-          'https://avatars.mds.yandex.net/get-kinopoisk-image/1777765/fd4e75bb-a6fe-46ef-86cd-0f470334fcbd/600x900',
-      releaseDate: '1977',
-      description:
-          'Робкий холостяк решает приударить за строгой начальницей. Комедия Эльдара Рязанова, классика советского кино.',
-    ),
-    FilmCardModel(
-      id: 2,
-      title: 'Волк с Уолл-стрит',
-      // voteAverage: 7.9,
-      picture:
-          'https://avatars.mds.yandex.net/get-kinopoisk-image/1600647/c5876e81-9dec-43e2-923f-fee2fca85e21/576x',
-      releaseDate: '2013',
-      description:
-          'Восхождение циника-гедониста на бизнес-олимп 1980-х. Блистательный тандем Леонардо ДиКаприо и Мартина Скорсезе',
-    ),
-    FilmCardModel(
-      id: 3,
-      title: 'Бриллиантовая рука',
-      voteAverage: 8.5,
-      picture:
-          'https://avatars.mds.yandex.net/get-kinopoisk-image/1600647/a419d20d-4ae6-4c7c-91b3-c38ef9ca1ffe/600x900',
-      releaseDate: '1968',
-      description:
-          'Контрабандисты гоняются за примерным семьянином. Народная комедия с элементами абсурда от Леонида Гайдая',
-    ),
-    FilmCardModel(
-      id: 4,
-      title: 'Интерстеллар',
-      voteAverage: 8.6,
-      picture:
-          'https://avatars.mds.yandex.net/get-kinopoisk-image/1600647/430042eb-ee69-4818-aed0-a312400a26bf/600x900',
-      releaseDate: '2014',
-      description:
-          'Фантастический эпос про задыхающуюся Землю, космические полеты и парадоксы времени. «Оскар» за спецэффекты',
-    ),
-  ];
+  @override
+  State<FilmList> createState() => _FilmListState();
+}
+
+class _FilmListState extends State<FilmList> {
+  late Future<List<FilmCardModel>> filmsList;
+
+  @override
+  void initState() {
+    filmsList = FilmsRepository(onErrorHandler: ((String code, String message) {
+      context
+          .read<ErrorBloc>()
+          .add(ShowDialogEvent(title: code, message: message));
+    })).getAllFilmsDB();
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: films.length,
-      itemBuilder: (BuildContext context, int index) {
-        return FilmTile.fromModel(model: films[index]);
+    return BlocBuilder<HomeBloc, HomeState>(
+      buildWhen: (oldState, newState) =>
+          oldState.data != newState.data ||
+          oldState.favouriteFilms != newState.favouriteFilms,
+      builder: (context, state) {
+        return FutureBuilder<List<FilmCardModel>>(
+          future: filmsList,
+          builder:
+              (BuildContext context, AsyncSnapshot<List<FilmCardModel>> data) {
+            return data.connectionState != ConnectionState.done
+                ? const Center(child: CircularProgressIndicator())
+                : data.hasData
+                    ? GridView.builder(
+                        itemBuilder: (BuildContext context, int index) {
+                          bool isSelected = false;
+                          if (state.favouriteFilms?.isNotEmpty == true) {
+                            var moviesFavourite = state.favouriteFilms
+                                ?.firstWhereOrNull((element) =>
+                                    element.id == data.data?[index].id);
+                            if (moviesFavourite != null) {
+                              isSelected = true;
+                            }
+                          }
+
+                          return Padding(
+                            padding: const EdgeInsets.all(6.0),
+                            child: FilmCard(
+                              isSelected: isSelected,
+                              onChangedFavourites: () {
+                                isSelected = !isSelected;
+
+                                context.read<HomeBloc>().add(
+                                      ChangedFavouritesEvent(
+                                        model: data.data?[index],
+                                      ),
+                                    );
+                              },
+                              filmCardModel: data.data![index],
+                              key: ValueKey<int>(data.data?[index].id ?? -1),
+                            ),
+                          );
+                        },
+                        itemCount: data.data?.length,
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          childAspectRatio: 2 / 3,
+                        ),
+                      )
+                    : const Error();
+          },
+        );
       },
+    );
+  }
+}
+
+class Error extends StatelessWidget {
+  const Error({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Image.network(
+      MovieQuery.pisecImageUrl,
+      fit: BoxFit.fitWidth,
     );
   }
 }
