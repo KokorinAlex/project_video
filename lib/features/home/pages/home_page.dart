@@ -48,11 +48,7 @@ class HomePage extends StatelessWidget {
           ),
         ],
       ),
-      body: BlocProvider<HomeBloc>(
-          lazy: false,
-          create: (BuildContext context) =>
-              HomeBloc(context.read<FilmsRepository>()),
-          child: const FilmGrid()),
+      body: const FilmGrid(),
     );
   }
 }

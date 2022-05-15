@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_video/data/repositories/films_repository.dart';
 import 'package:project_video/error_bloc/error_bloc.dart';
 import 'package:project_video/error_bloc/error_event.dart';
+import 'package:project_video/features/home/pages/bloc/home_bloc.dart';
 import 'package:project_video/features/home/pages/home_page.dart';
 import 'package:project_video/features/home/pages/favourite_page.dart';
 import 'package:flutter/material.dart';
@@ -42,15 +43,20 @@ class _MainPageState extends State<MainPage> {
         lazy: false,
         create: (_) => ErrorBloc(),
         child: RepositoryProvider<FilmsRepository>(
-            lazy: true,
-            create: (BuildContext context) => FilmsRepository(
-                  onErrorHandler: (String code, String message) {
-                    context
-                        .read<ErrorBloc>()
-                        .add(ShowDialogEvent(title: code, message: message));
-                  },
-                ),
-            child: MainPage._tabs.elementAt(_selectedIndex).page),
+          lazy: true,
+          create: (BuildContext context) => FilmsRepository(
+            onErrorHandler: (String code, String message) {
+              context
+                  .read<ErrorBloc>()
+                  .add(ShowDialogEvent(title: code, message: message));
+            },
+          ),
+          child: BlocProvider<HomeBloc>(
+              lazy: false,
+              create: (BuildContext context) =>
+                  HomeBloc(context.read<FilmsRepository>()),
+              child: MainPage._tabs.elementAt(_selectedIndex).page),
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: List.generate(
@@ -69,6 +75,8 @@ class _MainPageState extends State<MainPage> {
     );
   }
 }
+
+// MainPage._tabs.elementAt(_selectedIndex).page),
 
 class _Tab {
   const _Tab({required this.icon, required this.page, required this.label});

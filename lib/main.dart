@@ -2,11 +2,8 @@ import 'package:project_video/app/widgets/details_page.dart';
 import 'package:project_video/app/widgets/main_page.dart';
 import 'package:project_video/app/widgets/not_found_page.dart';
 import 'package:project_video/features/filter/pages/filter_page.dart';
-
 import 'package:project_video/features/filter/widgets/filtering_by_rating.dart';
-
 import 'package:project_video/features/settings/pages/setting_page.dart';
-
 import 'package:flutter/material.dart';
 
 void main() {

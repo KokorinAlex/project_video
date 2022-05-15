@@ -49,11 +49,7 @@ class FavouritePage extends StatelessWidget {
           ),
         ],
       ),
-      body: BlocProvider<HomeBloc>(
-          lazy: false,
-          create: (BuildContext context) =>
-              HomeBloc(context.read<FilmsRepository>()),
-          child: const FilmList()),
+      body: const FilmList(),
     );
   }
 }
