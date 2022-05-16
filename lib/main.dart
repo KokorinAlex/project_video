@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
       lazy: false,
       create: (_) => ErrorBloc(),
       child: RepositoryProvider<FilmsRepository>(
-        lazy: true,
+        lazy: false,
         create: (BuildContext context) => FilmsRepository(
           onErrorHandler: (String code, String message) {
             context
@@ -36,11 +36,11 @@ class MyApp extends StatelessWidget {
           },
         ),
         child: BlocProvider<HomeBloc>(
-          lazy: true,
+          lazy: false,
           create: (BuildContext context) =>
               HomeBloc(context.read<FilmsRepository>()),
           child: BlocProvider<LocaleBloc>(
-            lazy: true,
+            lazy: false,
             create: (_) => LocaleBloc(),
             child: BlocBuilder<LocaleBloc, LocaleState>(
               builder: (context, state) {

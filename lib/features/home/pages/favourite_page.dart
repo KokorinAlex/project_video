@@ -64,14 +64,14 @@ class _FilmListState extends State<FilmList> {
   late Future<List<FilmCardModel>> filmsList;
 
   @override
-  void initState() {
+  void didChangeDependencies() {
     filmsList = FilmsRepository(onErrorHandler: ((String code, String message) {
       context
           .read<ErrorBloc>()
           .add(ShowDialogEvent(title: code, message: message));
     })).getAllFilmsDB();
 
-    super.initState();
+    super.didChangeDependencies();
   }
 
   @override
