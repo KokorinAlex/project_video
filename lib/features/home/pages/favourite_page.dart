@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_video/app/constants.dart';
+import 'package:project_video/app/locals/locals.dart';
 import 'package:project_video/app/models/film_card_model.dart';
 import 'package:project_video/app/widgets/film_card.dart';
 import 'package:project_video/data/repositories/films_repository.dart';
@@ -14,9 +15,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 class FavouritePage extends StatelessWidget {
-  const FavouritePage({required this.title, Key? key}) : super(key: key);
-
-  final String title;
+  const FavouritePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +25,7 @@ class FavouritePage extends StatelessWidget {
           onPressed: () {},
           icon: const Icon(Icons.menu),
         ),
-        title: Text(title),
+        title: Text(context.locale.favourites),
         actions: [
           IconButton(
             onPressed: () {
@@ -130,18 +129,6 @@ class _FilmListState extends State<FilmList> {
           },
         );
       },
-    );
-  }
-}
-
-class Error extends StatelessWidget {
-  const Error({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Image.network(
-      MovieQuery.pisecImageUrl,
-      fit: BoxFit.fitWidth,
     );
   }
 }

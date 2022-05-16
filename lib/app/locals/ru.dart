@@ -27,4 +27,34 @@ class LocaleRu implements LocaleBase {
 
   @override
   String get unknown => 'Неизвестно';
+
+  @override
+  String get noRating => 'Рейтинг отсутствует';
+
+  @override
+  String get backButton => 'Назад';
+
+  @override
+  String get clearName => 'Очистить имя';
+
+  @override
+  String get enterTheRating => 'Введите рейтинг';
+
+  @override
+  String get exitButton => 'Выход';
+
+  @override
+  String get filterPage => 'Фильтр';
+
+  @override
+  String get getName => 'Получить имя';
+
+  @override
+  String get saveName => 'Сохранить имя';
+
+  @override
+  String get settingPage => 'Настройки';
+
+  @override
+  String get showButton => 'Показать';
 }

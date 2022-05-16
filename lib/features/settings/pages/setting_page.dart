@@ -5,6 +5,7 @@ import 'package:project_video/app/widgets/primary_button.dart';
 import 'package:project_video/features/settings/bloc/setting_bloc.dart';
 import 'package:project_video/features/settings/bloc/setting_event.dart';
 import 'package:project_video/features/settings/bloc/setting_state.dart';
+import 'package:project_video/app/locals/locals.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({required this.arguments, Key? key}) : super(key: key);
@@ -40,7 +41,7 @@ class _SettingsPageState extends State<SettingsPageContent> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Settings'),
+        title: Text(context.locale.settingPage),
       ),
       body: Center(
         child: Column(
@@ -52,14 +53,14 @@ class _SettingsPageState extends State<SettingsPageContent> {
                 builder: (context, state) {
                   return Text(state.name ?? '');
                 }),
-            PrimaryButton('Получить имя', onPressed: () {
+            PrimaryButton(context.locale.getName, onPressed: () {
               context.read<SettingBloc>().add(LoadNameEvent(arguments));
             }),
-            PrimaryButton('Сохранить имя',
+            PrimaryButton(context.locale.saveName,
                 onPressed: () => context
                     .read<SettingBloc>()
                     .add(SaveNameEvent(name: arguments.name))),
-            PrimaryButton('Очистить имя',
+            PrimaryButton(context.locale.clearName,
                 onPressed: () =>
                     context.read<SettingBloc>().add(ClearNameEvent())),
             ElevatedButton(
@@ -68,9 +69,9 @@ class _SettingsPageState extends State<SettingsPageContent> {
               },
               child: Row(
                 mainAxisSize: MainAxisSize.min,
-                children: const <Widget>[
-                  Icon(Icons.exit_to_app),
-                  Text('Exit'),
+                children: <Widget>[
+                  const Icon(Icons.exit_to_app),
+                  Text(context.locale.exitButton),
                 ],
               ),
             ),
@@ -80,9 +81,9 @@ class _SettingsPageState extends State<SettingsPageContent> {
               },
               child: Row(
                 mainAxisSize: MainAxisSize.min,
-                children: const <Widget>[
-                  Icon(Icons.arrow_back),
-                  Text('Back'),
+                children: <Widget>[
+                  const Icon(Icons.arrow_back),
+                  Text(context.locale.backButton),
                 ],
               ),
             ),

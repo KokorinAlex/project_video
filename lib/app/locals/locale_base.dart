@@ -16,4 +16,24 @@ abstract class LocaleBase {
   String get search;
 
   String get switchLanguage;
+
+  String get noRating;
+
+  String get filterPage;
+
+  String get enterTheRating;
+
+  String get showButton;
+
+  String get settingPage;
+
+  String get getName;
+
+  String get saveName;
+
+  String get clearName;
+
+  String get exitButton;
+
+  String get backButton;
 }

@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:project_video/app/constants.dart';
+import 'package:project_video/app/locals/locals.dart';
 
 class DetailsPage extends StatelessWidget {
   const DetailsPage({required this.arguments, Key? key}) : super(key: key);
@@ -12,7 +13,7 @@ class DetailsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Details'),
+        title: Text(context.locale.details),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -37,39 +38,52 @@ class DetailsPage extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                const Padding(
-                  padding: EdgeInsets.only(right: 8),
-                  child: Icon(
-                    Icons.star,
-                    color: Colors.yellow,
-                  ),
-                ),
-                Text(
-                  arguments.voteAverage?.toStringAsFixed(1) ??
-                      'Рейтинг отсутствует',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: arguments.voteAverage == null
-                        ? Colors.blue
-                        : arguments.voteAverage! < 4
-                            ? Colors.red
-                            : arguments.voteAverage! >= 8
-                                ? Colors.green
-                                : Colors.black,
-                  ),
-                ),
-              ],
-            ),
-          ),
+              padding: const EdgeInsets.all(8.0),
+              child: arguments.voteAverage!.toStringAsFixed(0) != '0'
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          context.locale.ratingPrefix,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.black,
+                          ),
+                        ),
+                        Text(
+                          arguments.voteAverage!.toStringAsFixed(1),
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: arguments.voteAverage == null
+                                ? Colors.blue
+                                : arguments.voteAverage! < 4
+                                    ? Colors.red
+                                    : arguments.voteAverage! >= 8
+                                        ? Colors.green
+                                        : Colors.black,
+                          ),
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.only(left: 2),
+                          child: Icon(
+                            Icons.star,
+                            color: Colors.yellow,
+                          ),
+                        ),
+                      ],
+                    )
+                  : Text(
+                      context.locale.noRating,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: Colors.red,
+                      ),
+                    )),
           Text(
-            'Дата выхода: ${arguments.releaseDate ?? 'Не указано'}',
+            '${context.locale.releaseDate}${arguments.releaseDate}',
             style: Theme.of(context).textTheme.headline6,
           ),
-          Html(data: arguments.description ?? 'Описание отсутствует')
+          Html(data: arguments.description)
         ],
       ),
     );

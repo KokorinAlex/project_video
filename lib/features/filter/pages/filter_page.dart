@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:project_video/app/constants.dart';
 import 'package:project_video/app/models/film_card_model.dart';
 import 'package:project_video/app/models/home_model.dart';
 import 'package:project_video/data/repositories/films_repository.dart';
@@ -7,6 +8,7 @@ import 'package:project_video/error_bloc/error_event.dart';
 import 'package:project_video/features/filter/widgets/filtering_by_rating.dart';
 import 'package:flutter/material.dart';
 import 'package:project_video/features/home/pages/home_page.dart';
+import 'package:project_video/app/locals/locals.dart';
 
 class FilterPage extends StatefulWidget {
   const FilterPage({Key? key}) : super(key: key);
@@ -53,7 +55,7 @@ class _FilterPageState extends State<FilterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Filter'),
+        title: Text(context.locale.filterPage),
       ),
       body: FutureBuilder<HomeModel?>(
           future: rep,
@@ -73,7 +75,7 @@ class _FilterPageState extends State<FilterPage> {
                                     controller: raitingController,
                                     keyboardType: TextInputType.number,
                                     decoration: InputDecoration(
-                                      labelText: 'Enter the rating',
+                                      labelText: context.locale.enterTheRating,
                                       prefixText: '> ',
                                       enabledBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(20),
@@ -102,7 +104,7 @@ class _FilterPageState extends State<FilterPage> {
                                         arguments: RatingArguments(ratingFilms),
                                       );
                                     },
-                                    child: const Text('Show'))
+                                    child: Text(context.locale.showButton))
                               ],
                             ),
                           )

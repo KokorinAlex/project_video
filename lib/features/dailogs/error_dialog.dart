@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project_video/app/constants.dart';
+import 'package:project_video/app/locals/locals.dart';
 import 'package:project_video/features/home/pages/home_page.dart';
 
 void showErrorDialog({BuildContext? context, required String error}) {
@@ -41,7 +42,7 @@ class ErrorDialog extends StatelessWidget {
               const Icon(Icons.error, color: Colors.white),
               const SizedBox(height: 12),
               Text(
-                '${MovieLocal.error} ${error ?? MovieLocal.unknown}',
+                '${context.locale.error} ${error ?? context.locale.unknown}',
                 style: Theme.of(context)
                     .textTheme
                     .bodyText1

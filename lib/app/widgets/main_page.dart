@@ -6,22 +6,12 @@ import 'package:project_video/features/home/pages/bloc/home_bloc.dart';
 import 'package:project_video/features/home/pages/home_page.dart';
 import 'package:project_video/features/home/pages/favourite_page.dart';
 import 'package:flutter/material.dart';
+import 'package:project_video/app/locals/locals.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
 
-  static const List<_Tab> _tabs = <_Tab>[
-    _Tab(
-      icon: Icon(Icons.movie_filter),
-      label: 'Catalog',
-      page: HomePage(title: 'Catalog'),
-    ),
-    _Tab(
-      icon: Icon(Icons.local_movies_outlined),
-      label: 'Favourite',
-      page: FavouritePage(title: 'Favourite'),
-    ),
-  ];
+  static bool isEnLocale = false;
 
   @override
   State<MainPage> createState() => _MainPageState();
@@ -38,6 +28,18 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
+    List<_Tab> _tabs = <_Tab>[
+      _Tab(
+        icon: const Icon(Icons.movie_filter),
+        label: context.locale.catalog,
+        page: const HomePage(),
+      ),
+      _Tab(
+        icon: const Icon(Icons.favorite_outlined),
+        label: context.locale.favourites,
+        page: const FavouritePage(),
+      ),
+    ];
     return Scaffold(
       body: BlocProvider<ErrorBloc>(
         lazy: false,
@@ -55,14 +57,14 @@ class _MainPageState extends State<MainPage> {
               lazy: false,
               create: (BuildContext context) =>
                   HomeBloc(context.read<FilmsRepository>()),
-              child: MainPage._tabs.elementAt(_selectedIndex).page),
+              child: _tabs.elementAt(_selectedIndex).page),
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: List.generate(
-          MainPage._tabs.length,
+          _tabs.length,
           (index) {
-            final _Tab tab = MainPage._tabs[index];
+            final _Tab tab = _tabs[index];
             return BottomNavigationBarItem(
               icon: tab.icon,
               label: tab.label,

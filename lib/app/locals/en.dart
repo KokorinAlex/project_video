@@ -27,4 +27,34 @@ class LocaleEn implements LocaleBase {
 
   @override
   String get unknown => 'Unknown';
+
+  @override
+  String get noRating => 'No rating';
+
+  @override
+  String get backButton => 'Back';
+
+  @override
+  String get clearName => 'Clear name';
+
+  @override
+  String get enterTheRating => 'Enter the rating';
+
+  @override
+  String get exitButton => 'Exit';
+
+  @override
+  String get filterPage => 'Filter';
+
+  @override
+  String get getName => 'Get name';
+
+  @override
+  String get saveName => 'Save name';
+
+  @override
+  String get settingPage => 'Setting';
+
+  @override
+  String get showButton => 'Show';
 }

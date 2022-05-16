@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-
 import 'package:project_video/app/constants.dart';
+import 'package:project_video/app/locals/locals.dart';
 import 'package:project_video/app/models/film_card_model.dart';
 import 'package:project_video/app/widgets/details_page.dart';
 import 'package:project_video/app/widgets/like_button.dart';
@@ -64,7 +64,7 @@ class FilmCard extends StatelessWidget {
             right: 8,
             bottom: 8,
             child: PrimaryButton(
-              'More',
+              context.locale.details,
               onPressed: () {
                 Navigator.pushNamed(
                   context,
@@ -145,28 +145,3 @@ class NameFilm extends StatelessWidget {
     );
   }
 }
-
-// class LikeButton extends StatelessWidget {
-//   const LikeButton({
-//     Key? key,
-//     required this.onPressed,
-//     required this.isSelected,
-//   }) : super(key: key);
-
-//   final void Function() onPressed;
-//   final bool isSelected;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Center(
-//       child: IconButton(
-//         icon: Icon(isSelected ? Icons.favorite : Icons.heart_broken),
-//         color: isSelected ? Colors.red : Colors.white,
-//         onPressed: onPressed,
-//       ),
-//     );
-//   }
-// }
-
-
-
