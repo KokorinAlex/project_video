@@ -5,6 +5,7 @@ import 'package:project_video/app/locals/locals.dart';
 import 'package:project_video/app/models/home_model.dart';
 import 'package:project_video/app/widgets/film_card.dart';
 import 'package:project_video/app/widgets/main_page.dart';
+import 'package:project_video/features/filter/pages/filter_page.dart';
 import 'package:project_video/features/home/pages/bloc/home_bloc.dart';
 import 'package:project_video/features/home/pages/bloc/home_event.dart';
 import 'package:project_video/features/home/pages/bloc/home_state.dart';
@@ -18,28 +19,23 @@ import 'package:project_video/locale_bloc/locale_event.dart';
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
 
-  // final String title;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
+        centerTitle: true,
         leading: IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.menu),
+          onPressed: () {
+            Navigator.pushNamed(
+              context,
+              FilterPage.path,
+            );
+          },
+          icon: const Icon(Icons.sort),
         ),
         title: Text(context.locale.catalog),
         actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.pushNamed(
-                context,
-                '/filter',
-              );
-            },
-            icon: const Icon(Icons.sort),
-          ),
           IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () {

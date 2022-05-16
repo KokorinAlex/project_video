@@ -21,21 +21,18 @@ class FavouritePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         leading: IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.menu),
+          onPressed: () {
+            Navigator.pushNamed(
+              context,
+              FilterPage.path,
+            );
+          },
+          icon: const Icon(Icons.sort),
         ),
         title: Text(context.locale.favourites),
         actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.pushNamed(
-                context,
-                FilterPage.path,
-              );
-            },
-            icon: const Icon(Icons.sort),
-          ),
           IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () {
