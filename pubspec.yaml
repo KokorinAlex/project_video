@@ -54,15 +54,24 @@ dev_dependencies:
 
   flutter_launcher_icons: 0.9.2
 
+flutter_icons:
+  # for ios
+  ios: true
+  image_path: "assets/icon.png"
+  remove_alpha_ios: true
+  # for android
+  android: true
+  adaptive_icon_foreground: "assets/icon.png"
+  adaptive_icon_background: "#100454"
+  # flutter pub run flutter_launcher_icons:main
 
 flutter:
 
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+  assets:
+    - assets/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
