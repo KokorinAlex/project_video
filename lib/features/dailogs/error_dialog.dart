@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:project_video/app/constants.dart';
+import 'package:project_video/features/home/pages/catalog_page.dart';
 
-/// Функция вызова диалога ошибки
-void showErrorDialog(BuildContext context, {required String error}) {
-  showDialog(
-    context: context,
-    builder: (_) => ErrorDialog(error),
-  );
+void showErrorDialog({BuildContext? context, required String error}) {
+  final _context = context ?? FilmGrid.globalKey.currentContext;
+  if (_context != null) {
+    showDialog(
+      context: _context,
+      builder: (_) => ErrorDialog(error),
+    );
+  }
 }
 
-/// Простой диалог отображения ошибки
 class ErrorDialog extends StatelessWidget {
   final String? error;
 
