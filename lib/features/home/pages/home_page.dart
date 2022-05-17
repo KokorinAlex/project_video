@@ -1,9 +1,11 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_video/app/constants.dart';
 import 'package:project_video/app/delayed_action.dart';
+import 'package:project_video/app/locals/locals.dart';
 import 'package:project_video/app/models/home_model.dart';
 import 'package:project_video/app/widgets/film_card.dart';
-import 'package:project_video/data/repositories/films_repository.dart';
+import 'package:project_video/app/widgets/main_page.dart';
+import 'package:project_video/features/filter/pages/filter_page.dart';
 import 'package:project_video/features/home/pages/bloc/home_bloc.dart';
 import 'package:project_video/features/home/pages/bloc/home_event.dart';
 import 'package:project_video/features/home/pages/bloc/home_state.dart';
@@ -11,31 +13,29 @@ import 'package:project_video/features/settings/pages/setting_page.dart';
 import "dart:math";
 import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
+import 'package:project_video/locale_bloc/locale_bloc.dart';
+import 'package:project_video/locale_bloc/locale_event.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({required this.title, Key? key}) : super(key: key);
-
-  final String title;
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
+        centerTitle: true,
         leading: IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.menu),
+          onPressed: () {
+            Navigator.pushNamed(
+              context,
+              FilterPage.path,
+            );
+          },
+          icon: const Icon(Icons.sort),
         ),
-        title: Text(title),
+        title: Text(context.locale.catalog),
         actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.pushNamed(
-                context,
-                '/filter',
-              );
-            },
-            icon: const Icon(Icons.sort),
-          ),
           IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () {
@@ -78,12 +78,38 @@ class _FilmGridState extends State<FilmGrid> {
       child: Column(
         children: [
           Padding(
+            padding: const EdgeInsets.only(left: 10.0),
+            child: Row(
+              children: [
+                Checkbox(
+                  value: MainPage.isEnLocale,
+                  onChanged: (val) {
+                    MainPage.isEnLocale = val ?? false;
+                    context.read<LocaleBloc>().add(ChangeLocaleEvent(
+                        MainPage.isEnLocale
+                            ? availableLocales[enLocale]!
+                            : availableLocales[ruLocale]!));
+                  },
+                ),
+                Flexible(
+                  child: Text(
+                    context.locale.switchLanguage,
+                    style: Theme.of(context)
+                        .textTheme
+                        .headline5!
+                        .copyWith(color: Colors.black),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
             padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
             child: TextField(
               controller: textController,
               maxLines: 1,
-              decoration: const InputDecoration(
-                labelText: MovieLocal.search,
+              decoration: InputDecoration(
+                labelText: context.locale.search,
                 filled: true,
                 fillColor: Colors.white,
               ),
@@ -178,18 +204,6 @@ class _FilmGridState extends State<FilmGrid> {
     ];
     var i = refresh[Random().nextInt(refresh.length)];
     context.read<HomeBloc>().add(SearchChangedEvent(search: i));
-  }
-}
-
-class Error extends StatelessWidget {
-  const Error({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Image.network(
-      MovieQuery.pisecImageUrl,
-      fit: BoxFit.fitWidth,
-    );
   }
 }
 

@@ -12,11 +12,11 @@ class MovieQuery {
 }
 
 class MovieLocal {
-  static const String error = 'Ошибка';
+//   static const String error = 'Ошибка';
   static const String unknown = 'Неизвестно';
-  static const String ratingPrefix = 'Оценка: ';
-  static const String ratingSuffix = '/ 10';
-  static const String search = 'Поиск';
+//   static const String ratingPrefix = 'Оценка: ';
+//   static const String ratingSuffix = '/ 10';
+//   static const String search = 'Поиск';
 }
 
 /// Константы изображений
@@ -31,4 +31,16 @@ class MovieColors {
   static const Color greyColor = Color.fromRGBO(84, 84, 84, 1);
   static const Color cardBlackColor = Color.fromRGBO(28, 28, 28, 1.0);
   static const Color backgroundBlackColor = Color.fromRGBO(16, 16, 16, 1.0);
+}
+
+class Error extends StatelessWidget {
+  const Error({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Image.network(
+      MovieQuery.pisecImageUrl,
+      fit: BoxFit.fitWidth,
+    );
+  }
 }
