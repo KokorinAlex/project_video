@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project_video/app/constants.dart';
-import 'package:project_video/features/home/pages/catalog_page.dart';
+import 'package:project_video/features/home/pages/home_page.dart';
 
 void showErrorDialog({BuildContext? context, required String error}) {
   final _context = context ?? FilmGrid.globalKey.currentContext;

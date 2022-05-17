@@ -23,14 +23,14 @@ class DetailsPage extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Text(
-                arguments.title,
+                '${arguments.title}',
                 style: Theme.of(context).textTheme.headline5,
               ),
             ),
             Expanded(
               flex: 2,
               child: CachedNetworkImage(
-                imageUrl: arguments.picture,
+                imageUrl: '${arguments.picture}',
                 fit: BoxFit.cover,
                 errorWidget: (_, __, ___) =>
                     Image.network(MovieQuery.pisecImageUrl),
@@ -88,9 +88,9 @@ class DetailsArguments {
     this.description,
   );
 
-  final int id;
-  final String title;
-  final String picture;
+  final int? id;
+  final String? title;
+  final String? picture;
   final double? voteAverage;
   final String? releaseDate;
   final String? description;

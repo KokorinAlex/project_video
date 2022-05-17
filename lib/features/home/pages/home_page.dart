@@ -1,8 +1,16 @@
-import 'package:project_video/app/models/film_card_model.dart';
-import 'package:project_video/app/widgets/film_tile.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:project_video/app/constants.dart';
+import 'package:project_video/app/delayed_action.dart';
+import 'package:project_video/app/models/home_model.dart';
+import 'package:project_video/app/widgets/film_card.dart';
+import 'package:project_video/data/repositories/films_repository.dart';
+import 'package:project_video/features/home/pages/bloc/home_bloc.dart';
+import 'package:project_video/features/home/pages/bloc/home_event.dart';
+import 'package:project_video/features/home/pages/bloc/home_state.dart';
 import 'package:project_video/features/settings/pages/setting_page.dart';
-
+import "dart:math";
 import 'package:flutter/material.dart';
+import 'package:collection/collection.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({required this.title, Key? key}) : super(key: key);
@@ -40,74 +48,159 @@ class HomePage extends StatelessWidget {
           ),
         ],
       ),
-      body: const FilmList(),
+      body: const FilmGrid(),
     );
   }
 }
 
-class FilmList extends StatelessWidget {
-  const FilmList({Key? key}) : super(key: key);
+class FilmGrid extends StatefulWidget {
+  const FilmGrid({Key? key}) : super(key: key);
+  static final GlobalKey<State<StatefulWidget>> globalKey = GlobalKey();
 
-  static const List<FilmCardModel> films = <FilmCardModel>[
-    FilmCardModel(
-      id: 0,
-      title: 'Брат',
-      voteAverage: 8.3,
-      picture:
-          'https://avatars.mds.yandex.net/get-kinopoisk-image/1704946/e9008e2f-433f-43b0-b9b8-2ea8e3fb6c9b/600x900',
-      releaseDate: '1997',
-      description:
-          'Дембель Данила Багров защищает слабых в Петербурге 1990-х. Фильм, сделавший Сергея Бодрова народным героем.',
-    ),
-    FilmCardModel(
-      id: 1,
-      title: 'Служебный роман',
-      voteAverage: 8.3,
-      picture:
-          'https://avatars.mds.yandex.net/get-kinopoisk-image/1777765/fd4e75bb-a6fe-46ef-86cd-0f470334fcbd/600x900',
-      releaseDate: '1977',
-      description:
-          'Робкий холостяк решает приударить за строгой начальницей. Комедия Эльдара Рязанова, классика советского кино.',
-    ),
-    FilmCardModel(
-      id: 2,
-      title: 'Волк с Уолл-стрит',
-      // voteAverage: 7.9,
-      picture:
-          'https://avatars.mds.yandex.net/get-kinopoisk-image/1600647/c5876e81-9dec-43e2-923f-fee2fca85e21/576x',
-      releaseDate: '2013',
-      description:
-          'Восхождение циника-гедониста на бизнес-олимп 1980-х. Блистательный тандем Леонардо ДиКаприо и Мартина Скорсезе',
-    ),
-    FilmCardModel(
-      id: 3,
-      title: 'Бриллиантовая рука',
-      voteAverage: 8.5,
-      picture:
-          'https://avatars.mds.yandex.net/get-kinopoisk-image/1600647/a419d20d-4ae6-4c7c-91b3-c38ef9ca1ffe/600x900',
-      releaseDate: '1968',
-      description:
-          'Контрабандисты гоняются за примерным семьянином. Народная комедия с элементами абсурда от Леонида Гайдая',
-    ),
-    FilmCardModel(
-      id: 4,
-      title: 'Интерстеллар',
-      voteAverage: 8.6,
-      picture:
-          'https://avatars.mds.yandex.net/get-kinopoisk-image/1600647/430042eb-ee69-4818-aed0-a312400a26bf/600x900',
-      releaseDate: '2014',
-      description:
-          'Фантастический эпос про задыхающуюся Землю, космические полеты и парадоксы времени. «Оскар» за спецэффекты',
-    ),
-  ];
+  @override
+  State<FilmGrid> createState() => _FilmGridState();
+}
+
+class _FilmGridState extends State<FilmGrid> {
+  final TextEditingController textController = TextEditingController();
+
+  @override
+  void didChangeDependencies() {
+    context.read<HomeBloc>().add(LoadDataEvent());
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: films.length,
-      itemBuilder: (BuildContext context, int index) {
-        return FilmTile.fromModel(model: films[index]);
-      },
+    return RefreshIndicator(
+      key: FilmGrid.globalKey,
+      onRefresh: _pullToRefresh,
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
+            child: TextField(
+              controller: textController,
+              maxLines: 1,
+              decoration: const InputDecoration(
+                labelText: MovieLocal.search,
+                filled: true,
+                fillColor: Colors.white,
+              ),
+              onChanged: _onSearchFieldTextChanged,
+            ),
+          ),
+          BlocBuilder<HomeBloc, HomeState>(
+            buildWhen: (oldState, newState) =>
+                oldState.data != newState.data ||
+                oldState.favouriteFilms != newState.favouriteFilms,
+            builder: (context, state) {
+              return FutureBuilder<HomeModel?>(
+                future: state.data,
+                builder:
+                    (BuildContext context, AsyncSnapshot<HomeModel?> data) {
+                  return data.connectionState != ConnectionState.done
+                      ? const Center(child: CircularProgressIndicator())
+                      : data.hasData
+                          ? data.data?.results?.isNotEmpty == true
+                              ? Expanded(
+                                  child: GridView.builder(
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      bool isSelected = false;
+                                      if (state.favouriteFilms?.isNotEmpty ==
+                                          true) {
+                                        var moviesFavourite = state
+                                            .favouriteFilms
+                                            ?.firstWhereOrNull((element) =>
+                                                element.id ==
+                                                data.data?.results?[index].id);
+                                        if (moviesFavourite != null) {
+                                          isSelected = true;
+                                        }
+                                      }
+
+                                      return Padding(
+                                        padding: const EdgeInsets.all(6.0),
+                                        child: FilmCard(
+                                          isSelected: isSelected,
+                                          onChangedFavourites: () {
+                                            isSelected = !isSelected;
+
+                                            context.read<HomeBloc>().add(
+                                                  ChangedFavouritesEvent(
+                                                    model: data
+                                                        .data?.results?[index],
+                                                  ),
+                                                );
+                                          },
+                                          filmCardModel:
+                                              data.data!.results![index],
+                                          key: ValueKey<int>(
+                                              data.data?.results?[index].id ??
+                                                  -1),
+                                        ),
+                                      );
+                                    },
+                                    itemCount: data.data?.results?.length,
+                                    gridDelegate:
+                                        const SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 1,
+                                    ),
+                                  ),
+                                )
+                              : const Empty()
+                          : const Error();
+                },
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _onSearchFieldTextChanged(String text) {
+    DelayedAction.run(() {
+      context.read<HomeBloc>().add(SearchChangedEvent(search: text));
+    });
+  }
+
+  Future<void> _pullToRefresh() async {
+    List refresh = [
+      'bad',
+      'girl',
+      'throne',
+      'game',
+      'father',
+      'family',
+      'sister'
+    ];
+    var i = refresh[Random().nextInt(refresh.length)];
+    context.read<HomeBloc>().add(SearchChangedEvent(search: i));
+  }
+}
+
+class Error extends StatelessWidget {
+  const Error({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Image.network(
+      MovieQuery.pisecImageUrl,
+      fit: BoxFit.fitWidth,
+    );
+  }
+}
+
+class Empty extends StatelessWidget {
+  const Empty({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Image.network(
+      MovieQuery.nothingImageUrl,
+      fit: BoxFit.cover,
     );
   }
 }

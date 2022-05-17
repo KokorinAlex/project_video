@@ -1,3 +1,5 @@
+import 'package:project_video/data/db/database.dart';
+
 class FilmCardModel {
   final int id;
   final String title;
@@ -14,4 +16,30 @@ class FilmCardModel {
     this.releaseDate,
     this.description,
   });
+}
+
+extension FilmCardModelToDatabase on FilmCardModel {
+  FilmsTableData toDatabase() {
+    return FilmsTableData(
+      id: id,
+      title: title,
+      picture: picture,
+      releaseDate: releaseDate,
+      voteAverage: voteAverage,
+      description: description,
+    );
+  }
+}
+
+extension FilmTableDataToDomain on FilmsTableData {
+  FilmCardModel toDomain() {
+    return FilmCardModel(
+      id: id,
+      title: title,
+      picture: picture,
+      releaseDate: releaseDate,
+      voteAverage: voteAverage,
+      description: description,
+    );
+  }
 }

@@ -6,11 +6,11 @@ import 'package:project_video/error_bloc/error_bloc.dart';
 import 'package:project_video/error_bloc/error_event.dart';
 import 'package:project_video/features/filter/widgets/filtering_by_rating.dart';
 import 'package:flutter/material.dart';
-import 'package:project_video/features/home/pages/catalog_page.dart';
+import 'package:project_video/features/home/pages/home_page.dart';
 
 class FilterPage extends StatefulWidget {
   const FilterPage({Key? key}) : super(key: key);
-  static const String routeName = '/filter';
+  static const path = '/filter';
 
   @override
   State<FilterPage> createState() => _FilterPageState();
