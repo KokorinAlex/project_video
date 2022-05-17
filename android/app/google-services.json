@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "652622012798",
+    "project_id": "films-madbrains",
+    "storage_bucket": "films-madbrains.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:652622012798:android:0dfbf4679a2de2aa74932f",
+        "android_client_info": {
+          "package_name": "com.example.project_video"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "652622012798-lg314oa2qhmpebmj66c5kso3vchvodha.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMVkeTERgNxxS2ycWryixJdZwn9krqnYQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "652622012798-lg314oa2qhmpebmj66c5kso3vchvodha.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
